@@ -6,7 +6,7 @@ import json
 
 import dto
 from domain import models
-from domain.database_models.enums import SearchStatus, AnalizeStatus
+from domain.database_models.enums import SearchStatus, AnalizeStatus, Source
 
 # Replace these with your own values
 api_id = '26588107'
@@ -44,6 +44,8 @@ async def get_channel_messages(search: dto.SearchDTO):
                         print(message)
                         try:
                             post_obj = await models.Post.create(
+                                word=text,
+                                source = Source.TG,
                                 search_id=search.id,
                                 author = channel.title,
                                 author_id = channel.username,
@@ -81,6 +83,7 @@ async def get_channel_messages(search: dto.SearchDTO):
                     except:
                         pass
                     post_obj = await models.Post.create(
+                        word=text,
                         search_id=search.id,
                         author=author,
                         author_id=author_id,

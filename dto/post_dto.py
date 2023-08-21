@@ -5,8 +5,10 @@ from dto.base_dto import BaseListDTO
 
 
 class PostDTO(BaseModel):
+    id:str
     search_id:str
     text:str = None
+    source:str = None
     url:str = None
     media:list[str] = None
     date:str = None
@@ -23,6 +25,7 @@ class PostInputDTO(BaseModel):
     status:str
     tone:str = None
     summary:str = None
+    text_translated:str = None
 
 
 class PostListDTO(BaseListDTO):

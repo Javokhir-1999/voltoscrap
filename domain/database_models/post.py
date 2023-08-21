@@ -12,11 +12,13 @@ class Post(Model,BaseDBModel):
         null=True,
         related_name='posts'
     )
+    word = fields.CharField(max_length=20, null=True)
     pos_source_unique_id = fields.CharField(unique=True, max_length=20, null=True)
     source = fields.CharEnumField(enum_type=Source, null=True)
     author = fields.CharField(max_length=50, null=True)
     author_id = fields.CharField(max_length=50,null=True)
     text = fields.TextField(null=True)
+    text_translated = fields.TextField(null=True)
     url = fields.CharField(max_length=1000, null=True)
     media = fields.JSONField(null=True)
     date = fields.DatetimeField(null=True)

@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from starlette.responses import JSONResponse
 
 import dto
 import services
@@ -12,6 +13,24 @@ async def get_post(id: str) -> ModelResponse:
     post: dto.PostDTO = await services.PostService.get_detail(post_id=id)
     return ModelResponse(
         dto_model=post
+    )
+@router.get("/get-stat-by-tone/", response_model=dto.PostDTO)
+async def get_stat_by_tone(tone: str) -> ModelResponse:
+    data: dict = await services.PostService.get_stat_by_tone(tone=tone)
+    return JSONResponse(
+        content=data
+    )
+@router.get("/get-tones/", response_model=dto.PostDTO)
+async def get_tones() -> ModelResponse:
+    data: dict = await services.PostService.get_tones()
+    return JSONResponse(
+        content=data
+    )
+@router.get("/get-topics/", response_model=dto.PostDTO)
+async def get_topics() -> ModelResponse:
+    data: dict = await services.PostService.get_topics()
+    return JSONResponse(
+        content=data
     )
 
 

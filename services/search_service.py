@@ -33,7 +33,7 @@ class SearchService:
     @classmethod
     async def add_data(cls, search_input: dto.SearchInputDTO) -> dto.SearchDTO:
         search: models.Search = await models.Search.create(
-            word=','.join(search_input.words),
+            word=','.join(search_input.words).replace("`","'"),
             use_telegram=search_input.use_telegram,
             telegram_limit=search_input.telegram_limit,
             telegram_channel=','.join(search_input.telegram_channels) if search_input.telegram_channels else None,
