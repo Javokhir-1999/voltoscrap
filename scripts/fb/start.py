@@ -48,7 +48,6 @@ async def get_posts(search: dto.SearchDTO):
 
     fc.quit()
   
-  
     # import json
     # data = {'posts': ['фыв', 'sd'] }
     # json_object = json.dumps(data, indent=4, ensure_ascii=False).encode('utf8')

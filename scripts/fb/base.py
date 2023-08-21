@@ -22,7 +22,7 @@ class Base:
         return driver
         
     def slp(self):
-        return sleep(random.randint(1,3))
+        return sleep(random.randint(2,3))
 
     def scroll_range(self):
         return random.randint(random.randint(100, 250), random.randint(251, 300))
