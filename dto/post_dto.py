@@ -28,6 +28,9 @@ class PostInputDTO(BaseModel):
     summary:str = None
     text_translated:str = None
 
+class PostWordInputDTO(BaseModel):
+    word:str = None
+
 
 class PostListDTO(BaseListDTO):
     data: list[PostDTO] = []

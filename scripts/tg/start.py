@@ -83,6 +83,7 @@ async def get_channel_messages(search: dto.SearchDTO):
                     except:
                         pass
                     post_obj = await models.Post.create(
+                        source=Source.TG,
                         word=text,
                         search_id=search.id,
                         author=author,

@@ -89,7 +89,7 @@ class PostService:
             res = await Tortoise.get_connection('default').execute_query(f"""
             select json_build_object('tone',p.tone,'count', p.count)
             FROM  (  
-             select tone, count(*) as count from post where word='{word}' group by tone
+             select tone, count(*) as count from post where word='{word.replace("'","''")}' group by tone
              ) as p
             """)
             tones = []

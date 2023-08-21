@@ -40,9 +40,9 @@ async def get_tones():
     )
 
 
-@router.get("/get-tone_by_word/", response_model=dto.PostDTO)
-async def get_tone_by_word(word: str):
-    data: dict = await services.PostService.get_tone_by_word(word=word)
+@router.post("/get-tone-by-word/", response_model=dto.PostDTO)
+async def get_tone_by_word(word_input: dto.PostWordInputDTO):
+    data: dict = await services.PostService.get_tone_by_word(word=word_input.word)
     return JSONResponse(
         content=data
     )
