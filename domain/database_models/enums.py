@@ -12,7 +12,7 @@ class SearchStatus(Enum):
     PARSED = "parsed"
 
 class AnalizeStatus(Enum):
-    UNANALIZED = "unanalized"
-    ANALIZED = "analized"
+    UNANALIZED = "new"
+    ANALIZED = "analyzed"
     FAILED = "failed"
 
