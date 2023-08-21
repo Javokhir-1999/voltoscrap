@@ -5,7 +5,7 @@ from scripts.fb.get_post import get_detailed_post
 
 import dto
 from domain import models
-from domain.database_models.enums import SearchStatus, AnalizeStatus
+from domain.database_models.enums import SearchStatus, AnalizeStatus, Source
 
 class Facebook(Base):
     def login(self, usr, pwd):
@@ -32,7 +32,7 @@ class Facebook(Base):
         self.slp()
         search_box.send_keys(Keys.ENTER)
 
-    def scroll(self):
+    def scroll(self, search):
         browser_window_height = self.driver.get_window_size(windowHandle='current')['height']
         current_position = self.driver.execute_script('return window.pageYOffset')
         self.driver.execute_script("""
@@ -46,7 +46,7 @@ class Facebook(Base):
         reached_page_end = False
         last_height = self.driver.execute_script("return document.body.scrollHeight")
 
-        while not reached_page_end:
+        while not reached_page_end and i <= search.facebook_limit:
             self.slp()
             current_position = self.driver.execute_script('return window.pageYOffset')
             new_height = self.driver.execute_script(f"window.scrollTo({current_position}, {browser_window_height + current_position+self.scroll_range()});")
@@ -72,8 +72,10 @@ class Facebook(Base):
         
         for post_link in post_links:
             post = get_detailed_post(post_link)
-
-            post_obj = await models.Post.create(
+            print(post)
+            try:
+                post_obj = await models.Post.create(
+                                source=Source.FB,
                                 search_id=search.id,
                                 author = post['username'],
                                 author_id = post['user_id'],
@@ -83,8 +85,11 @@ class Facebook(Base):
                                 url = post['post_url'],
                                 # top_three_emoji = message.reactions,
                                 # shares = message.forwards,
-                                status = AnalizeStatus.UNANALIZED
+                                status = AnalizeStatus.NEW
                             )
+            except Exception as ex:
+                print("get post failed post_id:", "post_link", 'err_msg:', ex)
+                continue
 
       
 

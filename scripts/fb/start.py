@@ -39,10 +39,11 @@ import dto
 
 async def get_posts(search: dto.SearchDTO):
     fc = Facebook()
-    fc.login('sarvarhayatov5@gmail.com', 'Sarvar1995')
+    # fc.login('sarvarhayatov5@gmail.com', 'Sarvar1995')
+    fc.login('abdullajongaybullayev58@gmail.com', '10u&Nf9bVSeP')
     for text in search.words.split(','):
         fc.search(text)
-        fc.scroll()
+        fc.scroll(search)
         await fc.get_posts(search)
 
     fc.quit()
