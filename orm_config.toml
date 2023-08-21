@@ -1,0 +1,4 @@
+[tool.aerich]
+tortoise_orm = "config.settings.ORM_CREDENTIALS"
+location = "./domain/migrations"
+src_folder = "./."

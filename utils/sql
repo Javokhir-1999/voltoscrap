@@ -1,0 +1,16 @@
+create database pos_db;
+create user pos_user with encrypted password 'NsYi7#se4Q)0';
+grant all privileges on database pos_db to pos_user;
+
+
+CREATE SEQUENCE public.barcode_sequence
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE public.barcode_sequence
+    OWNER TO pos_user;
+
+
