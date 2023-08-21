@@ -13,6 +13,6 @@ class SearchStatus(Enum):
 
 class AnalizeStatus(Enum):
     NEW = "new"
-    ANALIZED = "analyzed"
+    ANALYZED = "analyzed"
     FAILED = "failed"
 
