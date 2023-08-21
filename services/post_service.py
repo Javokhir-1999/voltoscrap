@@ -37,7 +37,7 @@ class PostService:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post not found")
 
     @classmethod
-    async def get_stat_by_tone(cls, tone: str):
+    async def get_keyword_by_tone(cls, tone: str):
         try:
             res = await Tortoise.get_connection('default').execute_query(f"""
             select json_agg(json_build_object('word',p.word,'count', p.count,'comments_count', p.comments_count,'total_count', c.count))
@@ -52,12 +52,44 @@ class PostService:
         except Exception as e:
             print("Exception:",e)
     @classmethod
+    async def get_source_by_tone(cls, tone: str):
+        try:
+            res = await Tortoise.get_connection('default').execute_query(f"""
+            select json_agg(json_build_object('author_id',p.author_id,'count', p.count,'comments_count', p.comments_count,'total_count', c.count))
+            FROM (
+             select author_id, count(*) as count, sum(comments_count) as comments_count from post where tone='{tone}'  group by author_id) as p
+            JOIN (  
+             select author_id, count(*) as count from post  group by author_id)
+            AS c ON p.author_id = c.author_id;
+            """)
+            data = json.loads(res[1][0][0])
+            return {'data':data}
+        except Exception as e:
+            print("Exception:",e)
+
+    @classmethod
     async def get_tones(cls):
         try:
             res = await Tortoise.get_connection('default').execute_query(f"""
             select json_build_object('tone',p.tone,'count', p.count)
             FROM  (  
              select tone, count(*) as count from post  group by tone
+             ) as p
+            """)
+            tones = []
+            print(len(res[1]))
+            for r in res[1]:
+                tones.append(json.loads(r[0]))
+            return {'data':tones}
+        except Exception as e:
+            print("Exception:",e)
+    @classmethod
+    async def get_tone_by_word(cls,word:str):
+        try:
+            res = await Tortoise.get_connection('default').execute_query(f"""
+            select json_build_object('tone',p.tone,'count', p.count)
+            FROM  (  
+             select tone, count(*) as count from post where word='{word}' group by tone
              ) as p
             """)
             tones = []
@@ -110,6 +142,8 @@ class PostService:
         if post:
             if post_input.status:
                 post.status = AnalizeStatus[post_input.status.upper()]
+            if post_input.word:
+                post.word =post_input.word
             if post_input.tone:
                 post.tone =post_input.tone
             if post_input.summary:
