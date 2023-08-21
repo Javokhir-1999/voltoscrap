@@ -92,7 +92,7 @@ async def get_channel_messages(search: dto.SearchDTO):
                         date=message.date,
                         # top_three_emoji = message.reactions,
                         # shares = message.forwards,
-                        status=AnalizeStatus.UNANALIZED
+                        status=AnalizeStatus.NEW
                     )
                 except Exception as e:
                     print('Exception post:', e)
