@@ -14,20 +14,42 @@ async def get_post(id: str) -> ModelResponse:
     return ModelResponse(
         dto_model=post
     )
+
+
 @router.get("/get-stat-by-tone/", response_model=dto.PostDTO)
-async def get_stat_by_tone(tone: str) -> ModelResponse:
-    data: dict = await services.PostService.get_stat_by_tone(tone=tone)
+async def get_stat_by_tone(tone: str):
+    data: dict = await services.PostService.get_keyword_by_tone(tone=tone)
     return JSONResponse(
         content=data
     )
+
+
+@router.get("/get-source-by-tone/", response_model=dto.PostDTO)
+async def get_source_by_tone(tone: str):
+    data: dict = await services.PostService.get_source_by_tone(tone=tone)
+    return JSONResponse(
+        content=data
+    )
+
+
 @router.get("/get-tones/", response_model=dto.PostDTO)
-async def get_tones() -> ModelResponse:
+async def get_tones():
     data: dict = await services.PostService.get_tones()
     return JSONResponse(
         content=data
     )
+
+
+@router.post("/get-tone-by-word/", response_model=dto.PostDTO)
+async def get_tone_by_word(word_input: dto.PostWordInputDTO):
+    data: dict = await services.PostService.get_tone_by_word(word=word_input.word)
+    return JSONResponse(
+        content=data
+    )
+
+
 @router.get("/get-topics/", response_model=dto.PostDTO)
-async def get_topics() -> ModelResponse:
+async def get_topics():
     data: dict = await services.PostService.get_topics()
     return JSONResponse(
         content=data
@@ -35,7 +57,7 @@ async def get_topics() -> ModelResponse:
 
 
 @router.put("/put/{id}", response_model=dto.PostDTO)
-async def update_post(id: str, post_input: dto.PostInputDTO) -> ModelResponse:
+async def update_post(id: str, post_input: dto.PostInputDTO):
     post: dto.PostDTO = await services.PostService.update_data(post_id=id, post_input=post_input)
     return ModelResponse(
         dto_model=post
@@ -43,8 +65,8 @@ async def update_post(id: str, post_input: dto.PostInputDTO) -> ModelResponse:
 
 
 @router.get('/list/')
-async def get_post_list(search_id:str=None, page: int = 1, page_size: int = 10) -> ModelResponse:
-    posts: dto.PostListDTO = await services.PostService.get_list(search_id=search_id,page=page, page_size=page_size)
+async def get_post_list(search_id: str = None, page: int = 1, page_size: int = 10) -> ModelResponse:
+    posts: dto.PostListDTO = await services.PostService.get_list(search_id=search_id, page=page, page_size=page_size)
     return ModelResponse(
         dto_model=posts
     )

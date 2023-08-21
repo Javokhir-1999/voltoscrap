@@ -24,8 +24,12 @@ class PostDTO(BaseModel):
 class PostInputDTO(BaseModel):
     status:str
     tone:str = None
+    word:str = None
     summary:str = None
     text_translated:str = None
+
+class PostWordInputDTO(BaseModel):
+    word:str = None
 
 
 class PostListDTO(BaseListDTO):
