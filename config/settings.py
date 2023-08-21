@@ -23,3 +23,14 @@ ORM_CREDENTIALS = {
 SERVICES = {
     "sc_service":{"ip":"127.0.0.1", "port":7200},
 }
+
+
+
+"""
+
+
+create database scrap_db;
+create user sc_user with encrypted password 'NsYi7#se4Q)0';
+grant all privileges on database scrap_db to sc_user;
+
+"""

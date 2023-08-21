@@ -13,10 +13,10 @@ class SearchService:
     def __get_search_dto(cls, instance: models.Search) -> dto.SearchDTO:
         return dto.SearchDTO(
             id=str(instance.id),
-            word=instance.word,
+            words=instance.word,
             use_telegram=instance.use_telegram,
             telegram_limit=instance.telegram_limit,
-            telegram_channel=instance.telegram_channel,
+            telegram_channels=instance.telegram_channel,
             use_facebook=instance.use_facebook,
             facebook_limit=instance.facebook_limit,
             status=instance.status.value
@@ -33,10 +33,10 @@ class SearchService:
     @classmethod
     async def add_data(cls, search_input: dto.SearchInputDTO) -> dto.SearchDTO:
         search: models.Search = await models.Search.create(
-            word=search_input.word,
+            word=','.join(search_input.words),
             use_telegram=search_input.use_telegram,
             telegram_limit=search_input.telegram_limit,
-            telegram_channel=search_input.telegram_channel,
+            telegram_channel=','.join(search_input.telegram_channels) if search_input.telegram_channels else None,
             use_facebook=search_input.use_facebook,
             facebook_limit=search_input.facebook_limit,
             status=SearchStatus.NEW
