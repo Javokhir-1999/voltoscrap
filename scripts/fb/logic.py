@@ -25,13 +25,26 @@ class Facebook(Base):
         except Exception as ex:
             return ex
 
-    def search(self, txt: str = "test"):
+    def global_search(self, txt: str = "test"):
         self.slp()
         search_box = self.driver.find_element(By.XPATH,"//input[@type='search']")
         search_box.send_keys(txt)
 
         self.slp()
         search_box.send_keys(Keys.ENTER)
+    
+    def channel_search(self, txt: str = "test"):
+        self.slp()
+        chennel_search_box = self.driver.find_element(By.XPATH, "//div[@data-pagelet='ProfileActions']/div[3]")
+        chennel_search_box.click()
+
+        self.slp()
+        sleep(2)
+        chennel_search_box = self.driver.find_element(By.XPATH, "//div[@role='dialog']/input")
+        chennel_search_box.send_keys(txt)
+
+        self.slp()
+        chennel_search_box.send_keys(Keys.ENTER)
 
     def scroll(self, search):
         browser_window_height = self.driver.get_window_size(windowHandle='current')['height']
@@ -60,13 +73,13 @@ class Facebook(Base):
             page_height = new_page_height
             scroll_count += 1
 
-    async def get_posts(self, search, channel: None):
-        if channel:
-            try:
-                self.driver.get('https://www.facebook.com/'+channel)
-            except Exception as ex:
-                print(ex)
-                
+    def redirect_to_channel(self, channel_username):
+        try:
+            self.driver.get('https://www.facebook.com/'+channel_username)
+        except Exception as ex:
+            print(ex)
+
+    async def get_posts(self, search):
         posts = self.driver.find_elements(By.XPATH,"//span/a[contains(@href,'pfbid')]")
         # print(posts)
         post_links = []
