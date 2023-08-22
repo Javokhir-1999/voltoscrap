@@ -65,8 +65,8 @@ async def update_post(id: str, post_input: dto.PostInputDTO):
 
 
 @router.get('/list/')
-async def get_post_list(search_id: str = None, page: int = 1, page_size: int = 10) -> ModelResponse:
-    posts: dto.PostListDTO = await services.PostService.get_list(search_id=search_id, page=page, page_size=page_size)
+async def get_post_list(search_id: str = None,status:str = None, page: int = 1, page_size: int = 10) -> ModelResponse:
+    posts: dto.PostListDTO = await services.PostService.get_list(search_id=search_id,status=status, page=page, page_size=page_size)
     return ModelResponse(
         dto_model=posts
     )

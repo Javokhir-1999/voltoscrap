@@ -25,7 +25,8 @@ class PostService:
             comments_count=instance.comments_count,
             status=instance.status.value,
             tone=instance.tone,
-            summary=instance.summary
+            summary=instance.summary,
+            text_translated=instance.text_translated
         )
 
     @classmethod
@@ -119,10 +120,12 @@ class PostService:
 
 
     @classmethod
-    async def get_list(cls,search_id:str = None, page: int = 1, page_size: int = 10) -> dto.PostListDTO:
+    async def get_list(cls,search_id:str = None, status:str = None, page: int = 1, page_size: int = 10) -> dto.PostListDTO:
         query = Q()
         if search_id:
             query = query & Q(search_id=search_id)
+        if status:
+            query = query & Q(status=AnalizeStatus[status.upper()])
         posts, total = await paginate(
             models.Post.filter(query),
             page_size=page_size,
@@ -141,6 +144,7 @@ class PostService:
         post: models.Post = await models.Post.get_or_none(id=post_id)
         if post:
             if post_input.status:
+
                 post.status = AnalizeStatus[post_input.status.upper()]
             if post_input.word:
                 post.word =post_input.word
@@ -148,7 +152,9 @@ class PostService:
                 post.tone =post_input.tone
             if post_input.summary:
                 post.summary =post_input.summary
+
             if post_input.text_translated:
+                print(post_input.text_translated)
                 post.text_translated =post_input.text_translated
             await post.save()
             return cls.__get_post_dto(post)
