@@ -42,8 +42,8 @@ async def start(search: dto.SearchDTO):
     # fc.login('sarvarhayatov5@gmail.com', 'Sarvar1995')
     fc.login('abdullajongaybullayev58@gmail.com', '10u&Nf9bVSeP')
 
-    if search['telegram_channels']:
-        for channel in search['telegram_channels']:
+    if search.telegram_channels:
+        for channel in search.telegram_channels:
             for text in search.words.split(','):
                 fc.search(text)
                 fc.scroll(search)
