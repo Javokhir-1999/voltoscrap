@@ -37,19 +37,23 @@ import dto
 #         "ТОШКЕНТ ШАҲАР ҲОКИМИЯТИ"
 #     ]
 
-async def get_posts(search: dto.SearchDTO):
+async def start(search: dto.SearchDTO):
     fc = Facebook()
     # fc.login('sarvarhayatov5@gmail.com', 'Sarvar1995')
     fc.login('abdullajongaybullayev58@gmail.com', '10u&Nf9bVSeP')
-    for text in search.words.split(','):
-        fc.search(text)
-        fc.scroll(search)
-        await fc.get_posts(search)
+
+    if search['telegram_channel']:
+        for channel in search['telegram_channel']:
+            for text in search.words.split(','):
+                fc.search(text)
+                fc.scroll(search)
+                await fc.get_posts(search, channel)
+           
+    else:
+        for text in search.words.split(','):
+            fc.search(text)
+            fc.scroll(search)
+            await fc.get_posts(search)
 
     fc.quit()
   
-    # import json
-    # data = {'posts': ['фыв', 'sd'] }
-    # json_object = json.dumps(data, indent=4, ensure_ascii=False).encode('utf8')
-    # with open("data"+".json", "w") as outfile:
-    #     outfile.write(str(json_object.decode()))

@@ -4,7 +4,7 @@ import dto
 import services
 from utils.responses.model_response import ModelResponse
 from scripts.tg.start import get_channel_messages
-from scripts.fb.start import get_posts
+from scripts.fb.start import start
 
 router = APIRouter()
 
@@ -25,7 +25,7 @@ async def post_search(search_input: dto.SearchInputDTO, background_tasks: Backgr
         background_tasks.add_task(get_channel_messages, search)
     
     if search.use_facebook:
-        background_tasks.add_task(get_posts, search)
+        background_tasks.add_task(start, search)
     
     return ModelResponse(
         dto_model=search
