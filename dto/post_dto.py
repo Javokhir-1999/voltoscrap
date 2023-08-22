@@ -18,6 +18,7 @@ class PostDTO(BaseModel):
     status:str
     tone:str = None
     summary:str = None
+    text_translated:str = None
 
 
 

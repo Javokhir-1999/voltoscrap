@@ -6,6 +6,7 @@ from scripts.fb.get_post import get_detailed_post
 import dto
 from domain import models
 from domain.database_models.enums import SearchStatus, AnalizeStatus, Source
+from time import sleep
 
 class Facebook(Base):
     def login(self, usr, pwd):
@@ -41,19 +42,23 @@ class Facebook(Base):
                 document.head.appendChild(style);
             """)
 
-        i=0
+        scroll_count = 0
+        page_height = self.driver.execute_script("return document.body.scrollHeight")
 
-        reached_page_end = False
-        last_height = self.driver.execute_script("return document.body.scrollHeight")
-
-        while not reached_page_end and i <= search.facebook_limit:
-            self.slp()
+        while scroll_count <= search.facebook_limit:
             current_position = self.driver.execute_script('return window.pageYOffset')
-            new_height = self.driver.execute_script(f"window.scrollTo({current_position}, {browser_window_height + current_position+self.scroll_range()});")
-            if last_height == new_height:
-                reached_page_end = True
-            else:
-                last_height = new_height
+            self.driver.execute_script(f"window.scrollTo({current_position}, {browser_window_height + current_position+self.scroll_range()});")
+
+            self.slp()
+            sleep(1)
+
+            new_page_height = self.driver.execute_script("return document.body.scrollHeight")
+
+            if new_page_height == page_height:
+                break
+
+            page_height = new_page_height
+            scroll_count += 1
 
     async def get_posts(self, search):
         posts = self.driver.find_elements(By.XPATH,"//span/a[contains(@href,'pfbid')]")
