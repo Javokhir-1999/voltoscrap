@@ -12,4 +12,5 @@ class Search(Model,BaseDBModel):
     telegram_channel = fields.CharField(null=True, min_length=3, max_length=2000, default=None)
     use_facebook = fields.BooleanField(null=True, default=False)
     facebook_limit = fields.IntField(null=True, ge=2,default=10)
+    facebook_channel = fields.CharField(null=True, min_length=3, max_length=2000, default=None)
     status = fields.CharEnumField(enum_type=SearchStatus)

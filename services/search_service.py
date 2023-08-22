@@ -19,6 +19,7 @@ class SearchService:
             telegram_channels=instance.telegram_channel,
             use_facebook=instance.use_facebook,
             facebook_limit=instance.facebook_limit,
+            facebook_channels=instance.facebook_channel,
             status=instance.status.value
         )
 
@@ -39,6 +40,7 @@ class SearchService:
             telegram_channel=','.join(search_input.telegram_channels) if search_input.telegram_channels else None,
             use_facebook=search_input.use_facebook,
             facebook_limit=search_input.facebook_limit,
+            facebook_channel=','.join(search_input.facebook_channels) if search_input.facebook_channels else None,
             status=SearchStatus.NEW
         )
         return cls.__get_search_dto(search)
