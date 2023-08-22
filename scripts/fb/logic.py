@@ -35,7 +35,10 @@ class Facebook(Base):
     
     def channel_search(self, txt: str = "test"):
         self.slp()
-        chennel_search_box = self.driver.find_element(By.XPATH, "//div[@data-pagelet='ProfileActions']/div[3]")
+        chennel_search_box = self.driver.find_element(By.XPATH, "//div[@data-pagelet='ProfileActions']")
+        print(chennel_search_box)
+        chennel_search_box = self.driver.find_element(By.CSS_SELECTOR, "div[data-pagelet='ProfileActions']")
+        print(chennel_search_box)
         chennel_search_box.click()
 
         self.slp()

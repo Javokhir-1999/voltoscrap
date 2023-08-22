@@ -32,4 +32,3 @@ if __name__ == "__main__":
         port=settings.SERVICES['sc_service']['port'],
         host=settings.SERVICES['sc_service']['ip'],
     )
-
