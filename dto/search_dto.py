@@ -12,7 +12,7 @@ class SearchDTO(BaseModel):
     telegram_limit:int = Field(ge=1,default=5)
     use_facebook: bool =  False
     facebook_limit:int = Field(ge=2,default=10)
-    facebook_channels: str = Field(min_length=3, default=None)
+    facebook_channels: str = None
     status:str
 
 

@@ -42,16 +42,17 @@ async def start(search: dto.SearchDTO):
     # fc.login('sarvarhayatov5@gmail.com', 'Sarvar1995')
     fc.login('abdullajongaybullayev58@gmail.com', '10u&Nf9bVSeP')
 
-    if search.telegram_channels:
-        for channel in search.telegram_channels:
+    try:
+        for channel_username in search.facebook_channels.split(','):
+            fc.redirect_to_channel(channel_username)
             for text in search.words.split(','):
-                fc.search(text)
+                fc.channel_search(text)
                 fc.scroll(search)
-                await fc.get_posts(search, channel)
+                await fc.get_posts(search)
            
-    else:
+    except Exception as ex:
         for text in search.words.split(','):
-            fc.search(text)
+            fc.global_search(text)
             fc.scroll(search)
             await fc.get_posts(search)
 
