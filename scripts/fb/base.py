@@ -25,7 +25,7 @@ class Base:
         return sleep(random.randint(2,3))
 
     def scroll_range(self):
-        return random.randint(random.randint(100, 250), random.randint(251, 300))
+        return random.randint(random.randint(180, 290), random.randint(291, 400))
     
     def quit(self):
         self.driver.quit()

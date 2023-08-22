@@ -50,7 +50,7 @@ class Facebook(Base):
             self.driver.execute_script(f"window.scrollTo({current_position}, {browser_window_height + current_position+self.scroll_range()});")
 
             self.slp()
-            sleep(1)
+            sleep(2)
 
             new_page_height = self.driver.execute_script("return document.body.scrollHeight")
 
@@ -60,7 +60,13 @@ class Facebook(Base):
             page_height = new_page_height
             scroll_count += 1
 
-    async def get_posts(self, search):
+    async def get_posts(self, search, channel: None):
+        if channel:
+            try:
+                self.driver.get('https://www.facebook.com/'+channel)
+            except Exception as ex:
+                print(ex)
+                
         posts = self.driver.find_elements(By.XPATH,"//span/a[contains(@href,'pfbid')]")
         # print(posts)
         post_links = []
