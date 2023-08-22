@@ -114,6 +114,36 @@ class Facebook(Base):
                                 # shares = message.forwards,
                                 status = AnalizeStatus.NEW
                             )
+                for comment in post.get('comments_full',[]):
+                    print("comment:",comment)
+                    comment_obj = await models.Comment.create(
+                        post=post_obj,
+                        post_source_id=post_obj.pos_source_unique_id,
+                        source = Source.FB,
+                        author=comment.get('commenter_name',None),
+                        author_id=comment.get('commenter_id',None),
+                        text=comment.get('comment_text',None),
+                        url=comment.get('comment_url',None),
+                        date=comment.get('comment_time',None),
+                        emoji=comment.get('comment_reactions',None),
+                        status = AnalizeStatus.NEW
+                    )
+                    for repl in comment.get('replies',[]):
+                        print("repl:",repl)
+                        repl_obj = await models.Comment.create(
+                            post=post_obj,
+                            post_source_id=post_obj.pos_source_unique_id,
+                            source=Source.FB,
+                            reply_url = comment_obj.url,
+                            reply_comment = comment_obj,
+                            author=repl.get('commenter_name', None),
+                            author_id=repl.get('commenter_id', None),
+                            text=repl.get('comment_text', None),
+                            url=repl.get('comment_url', None),
+                            date=repl.get('comment_time', None),
+                            emoji=repl.get('comment_reactions', None),
+                            status=AnalizeStatus.NEW
+                        )
             except Exception as ex:
                 print("get post failed post_id:", "post_link", 'err_msg:', ex)
                 continue

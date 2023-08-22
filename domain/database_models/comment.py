@@ -13,7 +13,14 @@ class Comment(Model,BaseDBModel):
         null=True,
         related_name='comments'
     )
-    post_source_id = fields.CharField(max_length=50,null=True)
+    reply_comment = fields.ForeignKeyField(
+        "models.Comment",
+        on_delete=fields.SET_NULL,
+        null=True,
+        related_name='replies'
+    )
+    reply_url = fields.CharField(max_length=500,null=True)
+    post_source_id = fields.CharField(max_length=200,null=True)
     source = fields.CharEnumField(enum_type=Source, null=True)
     author = fields.CharField(max_length=50)
     author_id = fields.CharField(max_length=50)
@@ -24,6 +31,8 @@ class Comment(Model,BaseDBModel):
     emoji = fields.JSONField(null=True)
     top_three_emoji = fields.JSONField(null=True)
     status = fields.CharEnumField(enum_type=AnalizeStatus)
+    tone = fields.CharField(max_length=100, null=True)#
+    summary = fields.CharField(max_length=500, null=True)#
     data = fields.JSONField(null=True)
     post_id:uuid.UUID
     class Meta:
