@@ -6,6 +6,8 @@ from scripts.fb.get_post import get_detailed_post
 import dto
 from domain import models
 from domain.database_models.enums import SearchStatus, AnalizeStatus, Source
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from time import sleep
 
 class Facebook(Base):
@@ -25,6 +27,34 @@ class Facebook(Base):
         except Exception as ex:
             return ex
 
+    def redirect_to_channel(self, channel_username):
+        try:
+            self.driver.get('https://www.facebook.com/'+channel_username)
+        except Exception as ex:
+            print(ex)
+
+        self.slp()
+    
+    def go_back(self):
+        self.driver.back()
+    
+    def channel_search(self, txt: str = "test"):
+        
+        self.slp()
+        sleep(3)
+        chennel_search_button = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//div[@data-pagelet='ProfileActions']/div/div[3]"))
+        )
+        chennel_search_button.click()
+        
+        self.slp()
+        WebDriverWait(self.driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+        chennel_search_input = self.driver.find_elements(By.XPATH, "//input[@type='search' and @spellcheck='false']")[1]
+        chennel_search_input.send_keys(txt)
+
+        self.slp()
+        chennel_search_input.send_keys(Keys.ENTER)
+
     def global_search(self, txt: str = "test"):
         self.slp()
         search_box = self.driver.find_element(By.XPATH,"//input[@type='search']")
@@ -33,21 +63,6 @@ class Facebook(Base):
         self.slp()
         search_box.send_keys(Keys.ENTER)
     
-    def channel_search(self, txt: str = "test"):
-        # chennel_search_box = self.driver.find_element(By.XPATH, "//div[@data-pagelet='ProfileActions']/div/div[3")
-        self.slp()
-        chennel_search_box = self.driver.find_element(By.CSS_SELECTOR, "div[data-pagelet='ProfileActions']/div/:nth-child(3)")
-        chennel_search_box.click()
-
-        self.slp()
-        sleep(3)
-
-        chennel_search_input = self.driver.find_element(By.XPATH, "//div[@role='dialog']/div/div/div/div/div/div/label/input")
-        chennel_search_input.send_keys(txt)
-
-        self.slp()
-        chennel_search_box.send_keys(Keys.ENTER)
-
     def scroll(self, search):
         browser_window_height = self.driver.get_window_size(windowHandle='current')['height']
         current_position = self.driver.execute_script('return window.pageYOffset')
@@ -65,7 +80,7 @@ class Facebook(Base):
             self.driver.execute_script(f"window.scrollTo({current_position}, {browser_window_height + current_position+self.scroll_range()});")
 
             self.slp()
-            sleep(2)
+            WebDriverWait(self.driver, 50).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
 
             new_page_height = self.driver.execute_script("return document.body.scrollHeight")
 
@@ -74,14 +89,6 @@ class Facebook(Base):
 
             page_height = new_page_height
             scroll_count += 1
-
-    def redirect_to_channel(self, channel_username):
-        try:
-            self.driver.get('https://www.facebook.com/'+channel_username)
-        except Exception as ex:
-            print(ex)
-
-        self.slp()
 
     async def get_posts(self, search):
         posts = self.driver.find_elements(By.XPATH,"//span/a[contains(@href,'pfbid')]")
