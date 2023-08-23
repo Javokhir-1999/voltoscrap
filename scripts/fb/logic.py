@@ -34,17 +34,16 @@ class Facebook(Base):
         search_box.send_keys(Keys.ENTER)
     
     def channel_search(self, txt: str = "test"):
+        # chennel_search_box = self.driver.find_element(By.XPATH, "//div[@data-pagelet='ProfileActions']/div/div[3")
         self.slp()
-        chennel_search_box = self.driver.find_element(By.XPATH, "//div[@data-pagelet='ProfileActions']")
-        print(chennel_search_box)
-        chennel_search_box = self.driver.find_element(By.CSS_SELECTOR, "div[data-pagelet='ProfileActions']")
-        print(chennel_search_box)
+        chennel_search_box = self.driver.find_element(By.CSS_SELECTOR, "div[data-pagelet='ProfileActions']/div/:nth-child(3)")
         chennel_search_box.click()
 
         self.slp()
-        sleep(2)
-        chennel_search_box = self.driver.find_element(By.XPATH, "//div[@role='dialog']/input")
-        chennel_search_box.send_keys(txt)
+        sleep(3)
+
+        chennel_search_input = self.driver.find_element(By.XPATH, "//div[@role='dialog']/div/div/div/div/div/div/label/input")
+        chennel_search_input.send_keys(txt)
 
         self.slp()
         chennel_search_box.send_keys(Keys.ENTER)
@@ -81,6 +80,8 @@ class Facebook(Base):
             self.driver.get('https://www.facebook.com/'+channel_username)
         except Exception as ex:
             print(ex)
+
+        self.slp()
 
     async def get_posts(self, search):
         posts = self.driver.find_elements(By.XPATH,"//span/a[contains(@href,'pfbid')]")
