@@ -23,5 +23,20 @@ async def start(search: dto.SearchDTO):
             fc.scroll(search)
             await fc.get_posts(search)
 
+        if search.posts:
+            try:
+                for post_url in search.posts.split(','):
+                    fc.redirect_to_url(post_url)
+                    await fc.get_posts(search)
+
+            except Exception as ex:
+                print(ex)
+    
+        else:
+            for text in search.words.split(','):
+                fc.global_search(text)
+                fc.scroll(search)
+                await fc.get_posts(search)
+
+
     fc.quit()
-  

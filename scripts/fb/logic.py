@@ -27,12 +27,18 @@ class Facebook(Base):
         except Exception as ex:
             return ex
 
+    def redirect_to_url(self, url):
+        try:
+            self.driver.get(url)
+        except Exception as ex:
+            print(ex)
+        self.slp()
+
     def redirect_to_channel(self, channel_username):
         try:
             self.driver.get('https://www.facebook.com/'+channel_username)
         except Exception as ex:
             print(ex)
-
         self.slp()
     
     def go_back(self):

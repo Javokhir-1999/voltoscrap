@@ -7,6 +7,7 @@ from domain.database_models.base import BaseDBModel
 
 class Search(Model,BaseDBModel):
     word = fields.TextField(null=True)
+    post = fields.TextField(null=True)
     use_telegram = fields.BooleanField(null=True, default=False)
     telegram_limit = fields.IntField(null=True, ge=1,default=5)
     telegram_channel = fields.CharField(null=True, min_length=3, max_length=2000, default=None)

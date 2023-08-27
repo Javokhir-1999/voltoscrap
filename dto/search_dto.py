@@ -7,6 +7,7 @@ from dto.base_dto import BaseListDTO
 class SearchDTO(BaseModel):
     id: str
     words: str
+    posts: str
     telegram_channels: str = Field(min_length=3, default=None)
     use_telegram: bool =  False
     telegram_limit:int = Field(ge=1,default=5)
@@ -19,6 +20,7 @@ class SearchDTO(BaseModel):
 
 class SearchInputDTO(BaseModel):
     words: list[str]
+    posts: list[str]
     use_telegram: bool =  False
     telegram_limit:int = Field(ge=1,default=5)
     telegram_channels:list[str] = None
