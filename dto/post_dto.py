@@ -7,6 +7,8 @@ from dto.base_dto import BaseListDTO
 class PostDTO(BaseModel):
     id:str
     search_id:str
+    author:str = None
+    author_id:str = None
     text:str = None
     source:str = None
     url:str = None

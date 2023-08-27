@@ -96,17 +96,18 @@ class Facebook(Base):
         
         for post_link in post_links:
             post = get_detailed_post(post_link)
+
             print(post)
             try:
                 post_obj = await models.Post.create(
                                 source=Source.FB,
                                 search_id=search.id,
-                                author = post['username'],
-                                author_id = post['user_id'],
-                                pos_source_unique_id=post['post_id'],
-                                text = post['text'],
-                                date = post['time'],
-                                url = post['post_url'],
+                                author = post.get('username',None),
+                                author_id = post.get('user_id',None),
+                                pos_source_unique_id=post.get('post_id',None),
+                                text = post.get('text',None),
+                                date = post.get('time',None),
+                                url = post.get('post_url',None),
                                 # top_three_emoji = message.reactions,
                                 # shares = message.forwards,
                                 status = AnalizeStatus.NEW
@@ -117,6 +118,7 @@ class Facebook(Base):
                         post=post_obj,
                         post_source_id=post_obj.pos_source_unique_id,
                         source = Source.FB,
+                        comment_source_unique_id=comment.get('comment_id', None),
                         author=comment.get('commenter_name',None),
                         author_id=comment.get('commenter_id',None),
                         text=comment.get('comment_text',None),
@@ -133,6 +135,7 @@ class Facebook(Base):
                             source=Source.FB,
                             reply_url = comment_obj.url,
                             reply_comment = comment_obj,
+                            comment_source_unique_id=repl.get('comment_id', None),
                             author=repl.get('commenter_name', None),
                             author_id=repl.get('commenter_id', None),
                             text=repl.get('comment_text', None),

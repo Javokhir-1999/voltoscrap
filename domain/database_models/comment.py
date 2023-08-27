@@ -19,6 +19,7 @@ class Comment(Model,BaseDBModel):
         null=True,
         related_name='replies'
     )
+    comment_source_unique_id = fields.CharField(unique=True, max_length=200, null=True)
     reply_url = fields.CharField(max_length=500,null=True)
     post_source_id = fields.CharField(max_length=200,null=True)
     source = fields.CharEnumField(enum_type=Source, null=True)

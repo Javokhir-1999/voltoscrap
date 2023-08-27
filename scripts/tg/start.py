@@ -43,15 +43,23 @@ async def get_channel_messages(search: dto.SearchDTO):
                                                               limit=search.telegram_limit):
                         print(message)
                         try:
+                            author_id = None
+                            author = None
+                            try:
+                                author_id = message.chat.username
+                                author = message.chat.title
+                            except:
+                                pass
                             post_obj = await models.Post.create(
                                 word=text,
                                 source = Source.TG,
                                 search_id=search.id,
-                                author = channel.title,
+                                author = author,
                                 author_id = channel.username,
                                 pos_source_unique_id=message.id,
                                 text = message.text,
                                 date = message.date,
+                                url=f"https://t.me/{author_id}/{message.id}" if message.id else None,
                                 # top_three_emoji = message.reactions,
                                 # shares = message.forwards,
                                 status = AnalizeStatus.NEW
@@ -91,6 +99,7 @@ async def get_channel_messages(search: dto.SearchDTO):
                         pos_source_unique_id=message.id,
                         text=message.text,
                         date=message.date,
+                        url=f"https://t.me/{author_id}/{message.id}" if message.id else None,
                         # top_three_emoji = message.reactions,
                         # shares = message.forwards,
                         status=AnalizeStatus.NEW

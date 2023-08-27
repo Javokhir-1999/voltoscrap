@@ -18,6 +18,7 @@ class PostService:
             search_id=str(instance.search_id),
             source=instance.source.value if instance.source else None,
             author=instance.author,
+            author_id=instance.author_id,
             text=instance.text,
             url=instance.url,
             date=str(instance.date),
