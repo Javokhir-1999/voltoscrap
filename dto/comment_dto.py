@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 from dto.base_dto import BaseListDTO
 
 class CommentDTO(BaseModel):
+    id:str
     post_id:str
     author:str = None
     text:str = None

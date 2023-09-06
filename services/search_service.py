@@ -14,14 +14,18 @@ class SearchService:
         return dto.SearchDTO(
             id=str(instance.id),
             words=instance.word,
-            posts=instance.post,
+            fb_posts=instance.fb_post,
             use_telegram=instance.use_telegram,
             telegram_limit=instance.telegram_limit,
             telegram_channels=instance.telegram_channel,
             use_facebook=instance.use_facebook,
             facebook_limit=instance.facebook_limit,
             facebook_channels=instance.facebook_channel,
-            status=instance.status.value
+            status=instance.status.value,
+            tg_posts_count=instance.tg_posts_count,
+            tg_comments_count=instance.tg_comments_count,
+            fb_posts_count=instance.fb_posts_count,
+            fb_comments_count=instance.fb_comments_count
         )
 
     @classmethod
@@ -35,8 +39,8 @@ class SearchService:
     @classmethod
     async def add_data(cls, search_input: dto.SearchInputDTO) -> dto.SearchDTO:
         search: models.Search = await models.Search.create(
-            word=','.join(search_input.words).replace("`","'"),
-            post=','.join(search_input.posts) if search_input.posts else None,
+            word=','.join(search_input.words).replace("`", "'"),
+            fb_post=','.join(search_input.fb_posts) if search_input.fb_posts else None,
             use_telegram=search_input.use_telegram,
             telegram_limit=search_input.telegram_limit,
             telegram_channel=','.join(search_input.telegram_channels) if search_input.telegram_channels else None,
@@ -48,7 +52,7 @@ class SearchService:
         return cls.__get_search_dto(search)
 
     @classmethod
-    async def get_list(cls,search_text:str = None, page: int = 1, page_size: int = 10) -> dto.SearchListDTO:
+    async def get_list(cls, search_text: str = None, page: int = 1, page_size: int = 10) -> dto.SearchListDTO:
         query = Q()
         if search_text:
             query = query & Q(word=search_text)

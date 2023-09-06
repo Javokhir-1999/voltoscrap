@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from starlette.responses import JSONResponse
 
 import dto
 import services
@@ -36,4 +37,33 @@ async def delete_comment(id: str) -> ModelResponse:
     delete_msg: dto.DeleteMsgDTO = await services.CommentService.delete_data(comment_id=id)
     return ModelResponse(
         dto_model=delete_msg
+    )
+
+
+@router.get("/get-tones/", response_model=dto.PostDTO)
+async def get_tones():
+    data: dict = await services.CommentService.get_tones()
+    return JSONResponse(
+        content=data
+    )
+
+
+@router.post("/get-tone-by-word/", response_model=dto.PostDTO)
+async def get_tone_by_word(word_input: dto.PostWordInputDTO):
+    data: dict = await services.CommentService.get_tone_by_word(word=word_input.word)
+    return JSONResponse(
+        content=data
+    )
+
+@router.get("/get-post-omments-by-tone/", response_model=dto.PostDTO)
+async def get_post_comments_by_tone(tone:str):
+    data: dict = await services.CommentService.get_post_comments_by_tone(tone=tone)
+    return JSONResponse(
+        content=data
+    )
+@router.get("/get-topics/", response_model=dto.PostDTO)
+async def get_topics():
+    data: dict = await services.CommentService.get_topics()
+    return JSONResponse(
+        content=data
     )
