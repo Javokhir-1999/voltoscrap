@@ -13,6 +13,12 @@ class Comment(Model,BaseDBModel):
         null=True,
         related_name='comments'
     )
+    search = fields.ForeignKeyField(
+        "models.Search",
+        on_delete=fields.SET_NULL,
+        null=True,
+        related_name='comments'
+    )
     reply_comment = fields.ForeignKeyField(
         "models.Comment",
         on_delete=fields.SET_NULL,
@@ -36,5 +42,6 @@ class Comment(Model,BaseDBModel):
     summary = fields.CharField(max_length=500, null=True)#
     data = fields.JSONField(null=True)
     post_id:uuid.UUID
+    search_id:uuid.UUID
     class Meta:
         indexes = [('post_id',),]

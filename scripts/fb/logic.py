@@ -6,6 +6,8 @@ from scripts.fb.get_post import get_detailed_post
 import dto
 from domain import models
 from domain.database_models.enums import SearchStatus, AnalizeStatus, Source
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from time import sleep
 
 class Facebook(Base):
@@ -25,6 +27,40 @@ class Facebook(Base):
         except Exception as ex:
             return ex
 
+    def redirect_to_url(self, url):
+        try:
+            self.driver.get(url)
+        except Exception as ex:
+            print(ex)
+        self.slp()
+
+    def redirect_to_channel(self, channel_username):
+        try:
+            self.driver.get('https://www.facebook.com/'+channel_username)
+        except Exception as ex:
+            print(ex)
+        self.slp()
+    
+    def go_back(self):
+        self.driver.back()
+    
+    def channel_search(self, txt: str = "test"):
+        
+        self.slp()
+        sleep(3)
+        chennel_search_button = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//div[@data-pagelet='ProfileActions']/div/div[3]"))
+        )
+        chennel_search_button.click()
+        
+        self.slp()
+        WebDriverWait(self.driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+        chennel_search_input = self.driver.find_elements(By.XPATH, "//input[@type='search' and @spellcheck='false']")[1]
+        chennel_search_input.send_keys(txt)
+
+        self.slp()
+        chennel_search_input.send_keys(Keys.ENTER)
+
     def global_search(self, txt: str = "test"):
         self.slp()
         search_box = self.driver.find_element(By.XPATH,"//input[@type='search']")
@@ -33,19 +69,6 @@ class Facebook(Base):
         self.slp()
         search_box.send_keys(Keys.ENTER)
     
-    def channel_search(self, txt: str = "test"):
-        self.slp()
-        chennel_search_box = self.driver.find_element(By.XPATH, "//div[@data-pagelet='ProfileActions']/div[3]")
-        chennel_search_box.click()
-
-        self.slp()
-        sleep(2)
-        chennel_search_box = self.driver.find_element(By.XPATH, "//div[@role='dialog']/input")
-        chennel_search_box.send_keys(txt)
-
-        self.slp()
-        chennel_search_box.send_keys(Keys.ENTER)
-
     def scroll(self, search):
         browser_window_height = self.driver.get_window_size(windowHandle='current')['height']
         current_position = self.driver.execute_script('return window.pageYOffset')
@@ -63,7 +86,7 @@ class Facebook(Base):
             self.driver.execute_script(f"window.scrollTo({current_position}, {browser_window_height + current_position+self.scroll_range()});")
 
             self.slp()
-            sleep(2)
+            WebDriverWait(self.driver, 50).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
 
             new_page_height = self.driver.execute_script("return document.body.scrollHeight")
 
@@ -73,13 +96,8 @@ class Facebook(Base):
             page_height = new_page_height
             scroll_count += 1
 
-    def redirect_to_channel(self, channel_username):
-        try:
-            self.driver.get('https://www.facebook.com/'+channel_username)
-        except Exception as ex:
-            print(ex)
-
     async def get_posts(self, search):
+        search_obj = await models.Search.get(id=search.id)
         posts = self.driver.find_elements(By.XPATH,"//span/a[contains(@href,'pfbid')]")
         # print(posts)
         post_links = []
@@ -116,6 +134,7 @@ class Facebook(Base):
                     print("comment:",comment)
                     comment_obj = await models.Comment.create(
                         post=post_obj,
+                        search_id=search.id,
                         post_source_id=post_obj.pos_source_unique_id,
                         source = Source.FB,
                         comment_source_unique_id=comment.get('comment_id', None),
@@ -131,6 +150,7 @@ class Facebook(Base):
                         print("repl:",repl)
                         repl_obj = await models.Comment.create(
                             post=post_obj,
+                            search_id=search.id,
                             post_source_id=post_obj.pos_source_unique_id,
                             source=Source.FB,
                             reply_url = comment_obj.url,

@@ -17,40 +17,40 @@ async def get_post(id: str) -> ModelResponse:
 
 
 @router.get("/get-stat-by-tone/", response_model=dto.PostDTO)
-async def get_stat_by_tone(tone: str):
-    data: dict = await services.PostService.get_keyword_by_tone(tone=tone)
+async def get_stat_by_tone(tone: str, search_id:str=None):
+    data: dict = await services.PostService.get_keyword_by_tone(tone=tone,search_id=search_id)
     return JSONResponse(
         content=data
     )
 
 
 @router.get("/get-source-by-tone/", response_model=dto.PostDTO)
-async def get_source_by_tone(tone: str):
-    data: dict = await services.PostService.get_source_by_tone(tone=tone)
+async def get_source_by_tone(tone: str, search_id:str=None):
+    data: dict = await services.PostService.get_source_by_tone(tone=tone,search_id=search_id)
     return JSONResponse(
         content=data
     )
 
 
 @router.get("/get-tones/", response_model=dto.PostDTO)
-async def get_tones():
-    data: dict = await services.PostService.get_tones()
+async def get_tones(search_id:str=None):
+    data: dict = await services.PostService.get_tones(search_id=search_id)
     return JSONResponse(
         content=data
     )
 
 
 @router.post("/get-tone-by-word/", response_model=dto.PostDTO)
-async def get_tone_by_word(word_input: dto.PostWordInputDTO):
-    data: dict = await services.PostService.get_tone_by_word(word=word_input.word)
+async def get_tone_by_word(word_input: dto.PostWordInputDTO, search_id:str=None):
+    data: dict = await services.PostService.get_tone_by_word(word=word_input.word, search_id=search_id)
     return JSONResponse(
         content=data
     )
 
 
 @router.get("/get-topics/", response_model=dto.PostDTO)
-async def get_topics():
-    data: dict = await services.PostService.get_topics()
+async def get_topics(search_id:str=None):
+    data: dict = await services.PostService.get_topics(search_id=search_id)
     return JSONResponse(
         content=data
     )
