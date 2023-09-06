@@ -20,13 +20,13 @@ async def get_search(id: str) -> ModelResponse:
 @router.post("/post/", response_model=dto.SearchDTO)
 async def post_search(search_input: dto.SearchInputDTO, background_tasks: BackgroundTasks) -> ModelResponse:
     search: dto.SearchDTO = await services.SearchService.add_data(search_input=search_input)
-    
+
     if search.use_telegram:
         background_tasks.add_task(get_channel_messages, search)
     
     if search.use_facebook:
         background_tasks.add_task(start, search)
-    
+
     return ModelResponse(
         dto_model=search
     )
@@ -46,3 +46,7 @@ async def delete_search(id: str) -> ModelResponse:
     return ModelResponse(
         dto_model=delete_msg
     )
+@router.delete('/delete_all/')
+async def delete_all():
+    await services.SearchService.delete_all()
+    return {"message:", "All data deleted..."}

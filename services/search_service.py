@@ -76,3 +76,10 @@ class SearchService:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Search {search_id} not found")
         await search.delete()
         return dto.DeleteMsgDTO(msg=f"Search {search_id} successfully deleted")
+
+    @classmethod
+    async def delete_all(cls):
+        from domain import models
+        await models.Search.all().delete()
+        await models.Post.all().delete()
+        await models.Comment.all().delete()

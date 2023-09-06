@@ -86,7 +86,6 @@ class CommentService:
                  ) as p
                 """)
             tones = []
-            print(len(res[1]))
             for r in res[1]:
                 tones.append(json.loads(r[0]))
             return {'data': tones}
