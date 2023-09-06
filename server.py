@@ -13,7 +13,7 @@ async def startup():
     await init_db()
 
 
-origins = ['*']
+origins = ['*'] 
 
 app.add_middleware(
     CORSMiddleware,
